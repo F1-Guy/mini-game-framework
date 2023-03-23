@@ -1,4 +1,4 @@
-﻿namespace minigame_library
+﻿namespace minigame_library.Objects
 {
     public class Position
     {

@@ -4,7 +4,7 @@ namespace minigame_library.Objects
 {
     public class WorldObject : Entity
     {
-        public WorldObject(int id, string name, int startHealth, Position startPosition, List<Item> startInventory, bool isLootable, bool isRemovable)
+        public WorldObject(int id, string name, Position startPosition, bool isLootable, bool isRemovable, int startHealth = 100, List<Item>? startInventory = null)
             : base(id, name, startPosition, startHealth, startInventory)
         {
             IsLootable = isLootable;
@@ -14,5 +14,10 @@ namespace minigame_library.Objects
         public bool IsLootable { get; set; }
 
         public bool IsRemovable { get; set; }
+
+        public override void ReceiveHit(int damage)
+        {
+            if (IsRemovable) Health -= damage;
+        }
     }
 }

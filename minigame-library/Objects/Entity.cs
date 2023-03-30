@@ -4,7 +4,7 @@ namespace minigame_library.Objects
 {
     public abstract class Entity
     {
-        public Entity(int id, string name, Position startPosition, int startHealth = 100, List<Item>? startInventory = null)
+        public Entity(int id, string name, Position startPosition, int startHealth, List<Item>? startInventory)
         {
             Id = id;
             Name = name;
@@ -19,13 +19,12 @@ namespace minigame_library.Objects
 
         public int Health { get; set; }
 
+        public bool IsDead => Health <= 0;
+
         public Position Position { get; set; }
 
         public List<Item> Inventory { get; set; }
 
-        virtual public void ReceiveHit()
-        {
-            throw new NotImplementedException();
-        }
+        abstract public void ReceiveHit(int damage);
     }
 }

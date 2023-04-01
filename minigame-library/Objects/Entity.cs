@@ -4,9 +4,8 @@ namespace minigame_library.Objects
 {
     public abstract class Entity
     {
-        public Entity(int id, string name, Position startPosition, int startHealth, List<Item>? startInventory)
+        public Entity(string name, Position startPosition, int startHealth, List<Item>? startInventory)
         {
-            Id = id;
             Name = name;
             Position = startPosition;
             Health = startHealth;

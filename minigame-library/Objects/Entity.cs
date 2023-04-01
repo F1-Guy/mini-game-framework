@@ -25,6 +25,6 @@ namespace minigame_library.Objects
 
         public List<Item> Inventory { get; set; }
 
-        abstract public void ReceiveHit(int damage);
+        public abstract void ReceiveHit(int damage);
     }
 }

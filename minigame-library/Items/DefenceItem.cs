@@ -9,5 +9,7 @@
         }
 
         public int Protection { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -4,8 +4,8 @@ namespace minigame_library.Objects
 {
     public class WorldObject : Entity
     {
-        public WorldObject(int id, string name, Position startPosition, bool isLootable, bool isRemovable, int startHealth = 100, List<Item>? startInventory = null)
-            : base(id, name, startPosition, startHealth, startInventory)
+        public WorldObject(int id, string name, Position position, bool isLootable, bool isRemovable, int startHealth = 100, List<Item>? startInventory = null)
+            : base(id, name, position, startHealth, startInventory)
         {
             IsLootable = isLootable;
             IsRemovable = isRemovable;

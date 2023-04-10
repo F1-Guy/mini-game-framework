@@ -21,5 +21,10 @@
         {
             return Math.Sqrt(Math.Pow(position1.X - position2.X, 2) + Math.Pow(position1.Y - position2.Y, 2));
         }
+
+        public override string ToString()
+        {
+            return $"X-coordinate: {X} Y-coordinate: {Y}";
+        }
     }
 }

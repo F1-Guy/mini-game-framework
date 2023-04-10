@@ -5,8 +5,8 @@ namespace minigame_library.Objects
 {
     public class Creature : Entity
     {
-        public Creature(int id, string name, Position startPosition, int unarmedDamage, int startHealth = 100, List<Item>? startInventory = null) :
-            base(id, name, startPosition, startHealth, startInventory)
+        public Creature(string name, Position startPosition, int unarmedDamage, int startHealth = 100, List<Item>? startInventory = null) :
+            base(name, startPosition, startHealth, startInventory)
         {
             UnarmedDamage = unarmedDamage;
         }

@@ -1,2 +1,2 @@
-﻿global using System.Diagnostics;
-global using minigame_library.Logging;
+﻿global using minigame_library.Logging;
+global using System.Diagnostics;

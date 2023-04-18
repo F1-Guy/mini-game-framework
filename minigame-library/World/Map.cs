@@ -5,8 +5,7 @@ namespace minigame_library.World
     public class Map
     {
         private static Map? _instance;
-        private List<Entity> _entities;
-        private static Logger _logger = Logger.GetInstance();
+        private static readonly Logger _logger = Logger.GetInstance();
         private static int _id = 0;
 
         private Map()
@@ -18,15 +17,20 @@ namespace minigame_library.World
         {
             MaxX = maxX;
             MaxY = maxY;
-            _entities = entities ?? new List<Entity>();
+            Entities = entities ?? new List<Entity>();
         }
 
+        /// <summary>
+        /// Gets the maximum X (positive and negative) value of the map
+        /// </summary>
         public int MaxX { get; }
 
+        /// <summary>
+        /// Gets the maximum Y (positive and negative) value of the map
+        /// </summary>
         public int MaxY { get; }
 
-        // Make this private and add methods to modify the list
-        public List<Entity> Entities { get { return _entities; } }
+        public List<Entity> Entities { get; }
 
         #region Singleton Methods
         public static Map CreateInstance(int maxX, int maxY, List<Entity>? entities = null)
@@ -55,43 +59,75 @@ namespace minigame_library.World
         }
         #endregion
 
-        private bool IsOutOfBounds(Position position)
-        {
-            if (Math.Abs(position.X) > MaxX || Math.Abs(position.Y) > MaxY) return true;
-
-            return false;
-        }
-
         #region Entity Methods
+        /// <summary>
+        /// Add <paramref name="entity"/> to the map
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>The reference to <paramref name="entity"/></returns>
+        /// <exception cref="InvalidDataException"></exception>
         public Entity AddEntity(Entity entity)
         {
-            if (IsOutOfBounds(entity.Position)) throw new InvalidDataException($"Position: {entity.Position.ToString()} is out of map bounds");
+            if (IsOutOfBounds(entity.Position)) throw new InvalidDataException($"Position: {entity.Position} is out of map bounds");
             entity.Id = _id++;
 
-            _entities.Add(entity);
+            Entities.Add(entity);
 
             return entity;
         }
 
+        /// <summary>
+        /// Remove <paramref name="entity"/> from the map by reference
+        /// </summary>
+        /// <param name="entity"></param>
         public void RemoveEntity(Entity entity)
         {
-            _entities.Remove(_entities.Find(e => e.Id == entity.Id) ?? throw new Exception("Entity was not found"));
+            Entities.Remove(entity);
         }
 
-        public void RemoveEntity(int id)
+        /// <summary>
+        /// Remove all entities with the <paramref name="id"/> from the map
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void RemoveEntities(int id)
         {
-            _entities.Remove(_entities.Find(e => e.Id == id) ?? throw new Exception("Entity was not found"));
+            Entities.Remove(Entities.Find(e => e.Id == id) ?? throw new InvalidOperationException("Entity was not found"));
         }
 
-        public void RemoveEnitiesAtPosition(Position position)
+        /// <summary>
+        /// Remove all entities with the <paramref name="name"/> from the map
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void RemoveEntities(string name)
         {
-            foreach (Entity entity in _entities)
+            Entities.Remove(Entities.Find(e => e.Name == name) ?? throw new InvalidOperationException("Entity was not found"));
+        }
+
+        /// <summary>
+        /// Remove all entities at <paramref name="position"/> from the map
+        /// </summary>
+        /// <param name="position"></param>
+        public void RemoveEnities(Position position)
+        {
+            foreach (Entity entity in Entities)
             {
                 if (entity.Position == position)
                 {
-                    _entities.Remove(entity);
+                    Entities.Remove(entity);
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines if <paramref name="position"/> is out of bounds
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>The boolen that determines if the position is out of bounds</returns>
+        public bool IsOutOfBounds(Position position)
+        {
+            return Math.Abs(position.X) > MaxX || Math.Abs(position.Y) > MaxY;
         }
         #endregion
 

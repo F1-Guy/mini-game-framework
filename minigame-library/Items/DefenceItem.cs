@@ -6,10 +6,17 @@
             base(id, name, description)
         {
             Protection = protection;
+            IsActive = false;
         }
 
-        public int Protection { get; set; }
+        /// <summary>
+        /// Gets the amount of protection the item provides
+        /// </summary>
+        public int Protection { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the item will be used to protect the entity
+        /// </summary>
         public bool IsActive { get; set; }
     }
 }

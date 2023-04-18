@@ -6,7 +6,6 @@ namespace minigame_library.World
     {
         private static Map? _instance;
         private static readonly Logger _logger = Logger.GetInstance();
-        private static int _id = 0;
 
         private List<Entity> _entities;
 
@@ -48,6 +47,11 @@ namespace minigame_library.World
             return _instance;
         }
 
+        /// <summary>
+        /// Gets instance of map and throws exception if it does not exist
+        /// </summary>
+        /// <returns>The singleton instance of map</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static Map GetInstance()
         {
             if (_instance == null)

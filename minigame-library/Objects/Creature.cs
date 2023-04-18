@@ -1,20 +1,28 @@
 ﻿using minigame_library.Items;
 using minigame_library.World;
-using System.Runtime.CompilerServices;
 
 namespace minigame_library.Objects
 {
     public class Creature : Entity
     {
+        private readonly DefenceItem unarmored = new(0, "Unarmored", 0, "Used when no armor is equipped. Does not offer any protection");
+
         public Creature(string name, Position startPosition, int startHealth = 100, List<Item>? startInventory = null) :
             base(name, startPosition, startHealth, startInventory)
         {
+            Unarmed = new AttackItem(0, "Unarmed", 10, 1);
+            DefenceItem = unarmored;
         }
 
         /// <summary>
         /// Gets default unarmed attack item for all entities
         /// </summary>
-        public AttackItem Unarmed { get; } = new AttackItem(0, "Unarmed", 10, 1);
+        public AttackItem Unarmed { get; }
+
+        /// <summary>
+        /// Currently equipped defense item
+        /// </summary>
+        private DefenceItem DefenceItem;
 
         /// <summary>
         /// Moves Creature in <paramref name="direction"/> by 1 unit
@@ -54,9 +62,13 @@ namespace minigame_library.Objects
         {
             attackItem ??= Unarmed;
 
+            if (!Inventory.Contains(attackItem)) return;
             if (attackItem.Range < Position.DistanceFromCurrentPosition(entity.Position)) return;
 
-            entity.ReceiveHit(attackItem.Damage);
+            var damage = attackItem.Damage - DefenceItem.Protection;
+            if (damage < 0) damage = 0;
+
+            entity.ReceiveHit(damage);
         }
 
 
@@ -69,12 +81,18 @@ namespace minigame_library.Objects
         {
             attackItem ??= Unarmed;
 
+            if (!Inventory.Contains(attackItem)) return;
+
             Map map = Map.GetInstance();
 
             if (attackItem.Range < Position.DistanceFromCurrentPosition(position)) return;
 
             foreach (Entity? entity in map.Entities.Where(e => e.Position == position))
             {
+                var damage = attackItem.Damage - DefenceItem.Protection;
+
+                if (damage < 0) damage = 0;
+
                 entity.ReceiveHit(attackItem.Damage);
             }
         }
@@ -108,6 +126,26 @@ namespace minigame_library.Objects
             if (Unarmed.Range < Position.DistanceFromCurrentPosition(creature.Position)) return;
 
             if (creature.IsDead) Inventory.AddRange(creature.Inventory);
+        }
+
+        /// <summary>
+        /// Equips a specific defense item if it is in the inventory
+        /// </summary>
+        /// <param name="defenceItem"></param>
+        public void Equip(DefenceItem defenceItem)
+        {
+            if (Inventory.Contains(defenceItem))
+            {
+                DefenceItem = defenceItem;
+            }
+        }
+
+        /// <summary>
+        /// Removes the currently equipped defense item and equips the default unarmored item
+        /// </summary>
+        public void UnEquip()
+        {
+            DefenceItem = unarmored;
         }
     }
 }

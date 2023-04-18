@@ -2,7 +2,6 @@
 using minigame_library.Logging;
 using minigame_library.Objects;
 using minigame_library.World;
-using System;
 using System.Diagnostics;
 
 // Relative path supremacy, I will fix it later

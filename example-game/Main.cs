@@ -14,7 +14,6 @@ var player = new Creature("Player", new Position(0, 0), 100, new List<Item> { ne
 var enemy = new Creature("Enemy", new Position(3, 0), 2, null);
 var thing = new WorldObject("chest", new Position(1, 0), true, true, 500);
 
-
 player.Move(Direction.East);
 player.Hit(thing);
 Console.WriteLine(thing.Health);
@@ -23,7 +22,7 @@ player.Move(Direction.East);
 player.Hit(thing);
 player.Hit(enemy);
 
-Console.WriteLine(enemy.Health);
-Console.WriteLine(thing.Health);
+Console.WriteLine(enemy.Id);
+Console.WriteLine(thing.Id);
 
 

@@ -56,7 +56,6 @@ namespace minigame_library.World
                 throw new InvalidOperationException("Object not created");
             }
 
-            _logger.Log(TraceEventType.Verbose, "Map instance accessed");
             return _instance;
         }
         #endregion
@@ -85,15 +84,16 @@ namespace minigame_library.World
         }
 
         /// <summary>
-        /// Remove all entities with the <paramref name="id"/> from the map
+        /// Remove entity with <paramref name="id"/> from the map
         /// </summary>
         /// <param name="id"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void RemoveEntities(int id)
+        public void RemoveEntity(int id)
         {
             _entities.Remove(_entities.Find(e => e.Id == id) ?? throw new InvalidOperationException("Entity was not found"));
         }
 
+        // Look into if this works
         /// <summary>
         /// Remove all entities with the <paramref name="name"/> from the map
         /// </summary>

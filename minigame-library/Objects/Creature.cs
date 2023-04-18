@@ -1,11 +1,13 @@
 ﻿using minigame_library.Items;
 using minigame_library.World;
+using System;
 
 namespace minigame_library.Objects
 {
     public class Creature : Entity
     {
         private readonly DefenceItem unarmored = new(0, "Unarmored", 0, "Used when no armor is equipped. Does not offer any protection");
+        private readonly Logger _logger = Logger.GetInstance();
 
         public Creature(string name, Position startPosition, int startHealth = 100, List<Item>? startInventory = null) :
             base(name, startPosition, startHealth, startInventory)
@@ -28,7 +30,7 @@ namespace minigame_library.Objects
         /// Moves Creature in <paramref name="direction"/> by 1 unit
         /// </summary>
         /// <param name="direction"></param>
-        public void Move(Direction direction)
+        public virtual void Move(Direction direction)
         {
             Position newPosition = new(Position);
 
@@ -48,7 +50,11 @@ namespace minigame_library.Objects
                     break;
             }
 
-            if (newPosition.IsOutOfBounds()) return;
+            if (newPosition.IsOutOfBounds())
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to move out of bounds from {Position} to {newPosition}");
+                return;
+            }
 
             Position = new(newPosition);
         }
@@ -62,8 +68,17 @@ namespace minigame_library.Objects
         {
             attackItem ??= Unarmed;
 
-            if (!Inventory.Contains(attackItem)) return;
-            if (attackItem.Range < Position.DistanceFromCurrentPosition(entity.Position)) return;
+            if (!Inventory.Contains(attackItem))
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to hit {entity.Name} but {Name} does not have that attack item in inventory");
+                return;
+            }
+
+            if (attackItem.Range < Position.DistanceFromCurrentPosition(entity.Position))
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to hit {entity.Name} with {attackItem.Name} but {Name} is out of range");
+                return;
+            }
 
             var damage = attackItem.Damage - DefenceItem.Protection;
             if (damage < 0) damage = 0;
@@ -81,11 +96,18 @@ namespace minigame_library.Objects
         {
             attackItem ??= Unarmed;
 
-            if (!Inventory.Contains(attackItem)) return;
+            if (!Inventory.Contains(attackItem))
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to hit position: {position} but {Name} does not have that attack item in inventory");
+                return;
+            }
 
             Map map = Map.GetInstance();
 
-            if (attackItem.Range < Position.DistanceFromCurrentPosition(position)) return;
+            if (attackItem.Range < Position.DistanceFromCurrentPosition(position))
+            {
+                _logger.Log(TraceEventType.Warning, $"The attack to position {position} was out of range");
+            }
 
             foreach (Entity? entity in map.Entities.Where(e => e.Position == position))
             {
@@ -103,7 +125,13 @@ namespace minigame_library.Objects
         /// <param name="damage"></param>
         public override void ReceiveHit(int damage)
         {
-            if (!IsDead) Health -= damage;
+            if (IsDead)
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} was hit but is already dead");
+                return;
+            }
+
+            Health -= damage;
         }
 
         /// <summary>
@@ -112,7 +140,11 @@ namespace minigame_library.Objects
         /// <param name="object"></param>
         public void Loot(WorldObject @object)
         {
-            if (Unarmed.Range < Position.DistanceFromCurrentPosition(@object.Position)) return;
+            if (Unarmed.Range < Position.DistanceFromCurrentPosition(@object.Position))
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to loot {@object.Name} but is too far away");
+                return;
+            }
 
             if (@object.IsLootable) Inventory.AddRange(@object.Inventory);
         }
@@ -123,7 +155,11 @@ namespace minigame_library.Objects
         /// <param name="creature"></param>
         public void Pick(Creature creature)
         {
-            if (Unarmed.Range < Position.DistanceFromCurrentPosition(creature.Position)) return;
+            if (Unarmed.Range < Position.DistanceFromCurrentPosition(creature.Position)) 
+            {
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to pick {creature.Name} but is too far away");
+                return;
+            } 
 
             if (creature.IsDead) Inventory.AddRange(creature.Inventory);
         }
@@ -134,10 +170,13 @@ namespace minigame_library.Objects
         /// <param name="defenceItem"></param>
         public void Equip(DefenceItem defenceItem)
         {
-            if (Inventory.Contains(defenceItem))
+            if (!Inventory.Contains(defenceItem))
             {
-                DefenceItem = defenceItem;
+                _logger.Log(TraceEventType.Warning, $"Entity {Name} tried to equip {defenceItem.Name} but does not have this item in its inventory");
+                return;
             }
+
+            DefenceItem = defenceItem;
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace minigame_library.Objects
             Health = startHealth;
             Inventory = startInventory ?? new List<Item>();
             Map.GetInstance().AddEntity(this);
-            _logger.Log(TraceEventType.Information, $"Entity was created at position {startPosition} Name: {name}");
+            _logger.Log(TraceEventType.Information, $"Entity with id {_id} was created at position {startPosition} Name: {name}");
         }
 
         /// <summary>

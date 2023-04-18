@@ -51,14 +51,14 @@
         /// <param name="loggingLevel"></param>
         /// <returns>The instance of the logger</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static Logger CreateInstance(string logFile, SourceLevels loggingLevel = SourceLevels.All)
+        public static Logger CreateInstance(string logFile)
         {
             if (_instance != null)
             {
                 throw new InvalidOperationException("Object already created");
             }
 
-            _instance = new Logger(logFile, loggingLevel);
+            _instance = new Logger(logFile, (SourceLevels)Config.LoggingLevel);
             _instance.Log(TraceEventType.Information, "Logger created");
             return _instance;
         }

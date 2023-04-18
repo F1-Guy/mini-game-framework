@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <mapConfig>
+    <MaxX>10</MaxX>
+    <MaxY>10</MaxY>
+  </mapConfig>
+  <loggerConfig>
+    <loggingLevel>-1</loggingLevel>
+    <dateTimeFormat>dd/MM/yy HH:mm:ss:fff</dateTimeFormat>
+  </loggerConfig>
+</configuration>

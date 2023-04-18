@@ -14,10 +14,10 @@ namespace minigame_library.World
             throw new InvalidOperationException("Use the Map.CreateInstance() method instead.");
         }
 
-        private Map(int maxX, int maxY, List<Entity>? entities = null)
+        private Map(List<Entity>? entities = null)
         {
-            MaxX = maxX;
-            MaxY = maxY;
+            MaxX = Config.maxX;
+            MaxY = Config.maxY;
             _entities = entities ?? new List<Entity>();
         }
 
@@ -34,7 +34,7 @@ namespace minigame_library.World
         public List<Entity> Entities { get { return _entities; } }
 
         #region Singleton Methods
-        public static Map CreateInstance(int maxX, int maxY, List<Entity>? entities = null)
+        public static Map CreateInstance(List<Entity>? entities = null)
         {
             if (_instance != null)
             {
@@ -42,8 +42,8 @@ namespace minigame_library.World
                 throw new InvalidOperationException("Object already created");
             }
 
-            _instance = new Map(maxX, maxY, entities);
-            _logger.Log(TraceEventType.Information, $"Map created with max-x: {maxX} max-y: {maxY}");
+            _instance = new Map(entities);
+            _logger.Log(TraceEventType.Information, $"Map created with");
             return _instance;
         }
 

@@ -2,15 +2,13 @@
 {
     internal class Debugger : TextWriterTraceListener
     {
-        private readonly string _datetimeForamt = "dd/MM/yy HH:mm:ss:fff";
-
         public Debugger(TextWriter writer) : base(writer)
         {
         }
 
         public override void Write(string? message)
         {
-            base.Write($"[{DateTime.Now.ToString(_datetimeForamt)}] {message}");
+            base.Write($"[{DateTime.Now.ToString(Config.DatetimeFormat)}] {message}");
         }
 
         public override void WriteLine(string? message)

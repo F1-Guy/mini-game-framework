@@ -13,10 +13,5 @@
         /// Gets the amount of protection the item provides
         /// </summary>
         public int Protection { get; }
-
-        public override string ToString()
-        {
-            return $"Name: {Name}, Protection: {Protection}, Description {Description ?? string.Empty}";
-        }
     }
 }

@@ -8,6 +8,8 @@ namespace minigame_library.World
         private static readonly Logger _logger = Logger.GetInstance();
         private static int _id = 0;
 
+        private List<Entity> _entities;
+
         private Map()
         {
             throw new InvalidOperationException("Use the Map.CreateInstance() method instead.");
@@ -17,7 +19,7 @@ namespace minigame_library.World
         {
             MaxX = maxX;
             MaxY = maxY;
-            Entities = entities ?? new List<Entity>();
+            _entities = entities ?? new List<Entity>();
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace minigame_library.World
         /// </summary>
         public int MaxY { get; }
 
-        public List<Entity> Entities { get; }
+        public List<Entity> Entities { get { return _entities; } }
 
         #region Singleton Methods
         public static Map CreateInstance(int maxX, int maxY, List<Entity>? entities = null)
@@ -66,14 +68,11 @@ namespace minigame_library.World
         /// <param name="entity"></param>
         /// <returns>The reference to <paramref name="entity"/></returns>
         /// <exception cref="InvalidDataException"></exception>
-        public Entity AddEntity(Entity entity)
+        public void AddEntity(Entity entity)
         {
-            if (IsOutOfBounds(entity.Position)) throw new InvalidDataException($"Position: {entity.Position} is out of map bounds");
-            entity.Id = _id++;
+            if (entity.Position.IsOutOfBounds()) throw new InvalidDataException($"Position: {entity.Position} is out of map bounds");
 
-            Entities.Add(entity);
-
-            return entity;
+            _entities.Add(entity);
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace minigame_library.World
         /// <param name="entity"></param>
         public void RemoveEntity(Entity entity)
         {
-            Entities.Remove(entity);
+            _entities.Remove(entity);
         }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace minigame_library.World
         /// <exception cref="InvalidOperationException"></exception>
         public void RemoveEntities(int id)
         {
-            Entities.Remove(Entities.Find(e => e.Id == id) ?? throw new InvalidOperationException("Entity was not found"));
+            _entities.Remove(_entities.Find(e => e.Id == id) ?? throw new InvalidOperationException("Entity was not found"));
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace minigame_library.World
         /// <exception cref="InvalidOperationException"></exception>
         public void RemoveEntities(string name)
         {
-            Entities.Remove(Entities.Find(e => e.Name == name) ?? throw new InvalidOperationException("Entity was not found"));
+            _entities.Remove(_entities.Find(e => e.Name == name) ?? throw new InvalidOperationException("Entity was not found"));
         }
 
         /// <summary>
@@ -111,23 +110,13 @@ namespace minigame_library.World
         /// <param name="position"></param>
         public void RemoveEnities(Position position)
         {
-            foreach (Entity entity in Entities)
+            foreach (Entity entity in _entities)
             {
                 if (entity.Position == position)
                 {
-                    Entities.Remove(entity);
+                    _entities.Remove(entity);
                 }
             }
-        }
-
-        /// <summary>
-        /// Determines if <paramref name="position"/> is out of bounds
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns>The boolen that determines if the position is out of bounds</returns>
-        public bool IsOutOfBounds(Position position)
-        {
-            return Math.Abs(position.X) > MaxX || Math.Abs(position.Y) > MaxY;
         }
         #endregion
 

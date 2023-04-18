@@ -1,5 +1,6 @@
 ﻿using minigame_library.Items;
 using minigame_library.World;
+using System.Runtime.CompilerServices;
 
 namespace minigame_library.Objects
 {
@@ -8,6 +9,40 @@ namespace minigame_library.Objects
         public Creature(string name, Position startPosition, int startHealth = 100, List<Item>? startInventory = null) :
             base(name, startPosition, startHealth, startInventory)
         {
+        }
+
+        /// <summary>
+        /// Gets default unarmed attack item for all entities
+        /// </summary>
+        public AttackItem Unarmed { get; } = new AttackItem(0, "Unarmed", 10, 1);
+
+        /// <summary>
+        /// Moves Creature in <paramref name="direction"/> by 1 unit
+        /// </summary>
+        /// <param name="direction"></param>
+        public void Move(Direction direction)
+        {
+            Position newPosition = new(Position);
+
+            switch (direction)
+            {
+                case Direction.North:
+                    newPosition.Y++;
+                    break;
+                case Direction.South:
+                    newPosition.Y--;
+                    break;
+                case Direction.East:
+                    newPosition.X++;
+                    break;
+                case Direction.West:
+                    newPosition.X--;
+                    break;
+            }
+
+            if (newPosition.IsOutOfBounds()) return;
+
+            Position = new(newPosition);
         }
 
         /// <summary>
@@ -52,7 +87,6 @@ namespace minigame_library.Objects
         {
             if (!IsDead) Health -= damage;
         }
-
 
         /// <summary>
         /// Take all items from object and add them to inventory if the object is lootable and in range

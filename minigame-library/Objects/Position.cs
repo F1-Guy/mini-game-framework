@@ -1,4 +1,6 @@
-﻿namespace minigame_library.Objects
+﻿using minigame_library.World;
+
+namespace minigame_library.Objects
 {
     public class Position
     {
@@ -6,6 +8,12 @@
         {
             X = x;
             Y = y;
+        }
+
+        public Position(Position position)
+        {
+            X = position.X;
+            Y = position.Y;
         }
 
         /// <summary>
@@ -17,24 +25,6 @@
         /// Gets or sets the Y coordinate of the position
         /// </summary>
         public int Y { get; set; }
-
-        // Figure this out for later
-        #region Operator overloads
-        public static bool operator ==(Position position1, Position position2)
-        {
-            return position1.X == position2.X && position1.Y == position2.Y;
-        }
-
-        public static bool operator !=(Position position1, Position position2)
-        {
-            return position1.X != position2.X || position1.Y != position2.Y;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y);
-        }
-        #endregion
 
         #region Distance methods
         /// <summary>
@@ -58,6 +48,17 @@
             return Math.Sqrt(Math.Pow(position1.X - position2.X, 2) + Math.Pow(position1.Y - position2.Y, 2));
         }
         #endregion
+
+        /// <summary>
+        /// Determines if <paramref name="position"/> is out of bounds
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>The boolen that determines if the position is out of bounds</returns>
+        public bool IsOutOfBounds()
+        {
+            var map = Map.GetInstance();
+            return Math.Abs(X) > map.MaxX || Math.Abs(Y) > map.MaxY;
+        }
 
         public override string ToString()
         {

@@ -1,5 +1,10 @@
 ﻿using minigame_library.World;
 using minigame_library.Objects;
+using minigame_library.Logging;
+using System.Diagnostics;
+
+// Relative path supremacy, I will fix it later
+var _logger = Logger.CreateInstance("../../../../log/log.txt", SourceLevels.All);
 
 var map = Map.CreateInstance(50, 50);
 

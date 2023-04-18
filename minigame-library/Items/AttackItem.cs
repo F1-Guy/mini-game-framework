@@ -9,8 +9,14 @@
             Range = ranage;
         }
 
+        /// <summary>
+        /// Specifies the amount of damage the item will deal
+        /// </summary>
         public int Damage { get; set; }
 
+        /// <summary>
+        /// Specifies the range of the item
+        /// </summary>
         public int Range { get; set; }
     }
 }

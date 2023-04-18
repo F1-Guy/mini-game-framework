@@ -1,15 +1,12 @@
-﻿using System.Diagnostics;
-
-namespace minigame_library.Logging
+﻿namespace minigame_library.Logging
 {
     public class Logger
     {
         private static Logger? _instance;
         private int _id = 0;
-        private string _datetimeForamt = "dd/MM/yy HH:mm:ss:fff";
 
-        private TraceSource ts;
-        private TraceListener listener;
+        private readonly TraceSource ts;
+        private readonly TraceListener listener;
 
         private Logger()
         {
@@ -20,14 +17,17 @@ namespace minigame_library.Logging
         {
             LogFile = logFile;
 
-            ts = new TraceSource("Debugger");
-            ts.Switch = new("User Switch") { Level = loggingLevel };
-            listener = new TextWriterTraceListener(new StreamWriter(logFile) { AutoFlush = true });
+            ts = new("Debugger")
+            {
+                Switch = new("User Switch") { Level = loggingLevel }
+            };
+
+            listener = new Debugger(new StreamWriter(logFile) { AutoFlush = true });
             ts.Listeners.Add(listener);
         }
 
         /// <summary>
-        /// File path for log file.
+        /// Gets file path specified used for the log file
         /// </summary>
         public string LogFile { get; }
 
@@ -36,7 +36,7 @@ namespace minigame_library.Logging
         /// Return an instance of the Logger class. Logger instance must be created first before calling this method.
         /// To create a Logger instance, use the CreateInstance() method. All classes depend on the Logger class.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns instance of the logger</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static Logger GetInstance()
         {
@@ -49,7 +49,7 @@ namespace minigame_library.Logging
         /// </summary>
         /// <param name="logFile"></param>
         /// <param name="loggingLevel"></param>
-        /// <returns></returns>
+        /// <returns>The instance of the logger</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static Logger CreateInstance(string logFile, SourceLevels loggingLevel = SourceLevels.All)
         {
@@ -71,7 +71,7 @@ namespace minigame_library.Logging
         /// <param name="message"></param>
         public void Log(TraceEventType evenetLevel, string message)
         {
-            ts.TraceEvent(evenetLevel, _id++, $"[{DateTime.Now.ToString(_datetimeForamt)}] {message}");
+            ts.TraceEvent(evenetLevel, _id++, message);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace minigame_library.Logging
         /// <param name="message"></param>
         public void Log(TraceEventType evenetLevel, int id, string message)
         {
-            ts.TraceEvent(evenetLevel, id, $"[{DateTime.Now.ToString(_datetimeForamt)}] {message}");
+            ts.TraceEvent(evenetLevel, id, message);
         }
     }
 }

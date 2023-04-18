@@ -5,9 +5,9 @@ namespace minigame_library.World
     public class Map
     {
         private static Map? _instance;
+        private static readonly Logger _logger = Logger.GetInstance();
+
         private List<Entity> _entities;
-        private static Logger _logger = Logger.GetInstance();
-        private static int _id = 0;
 
         private Map()
         {
@@ -21,11 +21,16 @@ namespace minigame_library.World
             _entities = entities ?? new List<Entity>();
         }
 
+        /// <summary>
+        /// Gets the maximum X (positive and negative) value of the map
+        /// </summary>
         public int MaxX { get; }
 
+        /// <summary>
+        /// Gets the maximum Y (positive and negative) value of the map
+        /// </summary>
         public int MaxY { get; }
 
-        // Make this private and add methods to modify the list
         public List<Entity> Entities { get { return _entities; } }
 
         #region Singleton Methods
@@ -42,6 +47,11 @@ namespace minigame_library.World
             return _instance;
         }
 
+        /// <summary>
+        /// Gets instance of map and throws exception if it does not exist
+        /// </summary>
+        /// <returns>The singleton instance of map</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static Map GetInstance()
         {
             if (_instance == null)
@@ -50,40 +60,59 @@ namespace minigame_library.World
                 throw new InvalidOperationException("Object not created");
             }
 
-            _logger.Log(TraceEventType.Verbose, "Map instance accessed");
             return _instance;
         }
         #endregion
 
-        private bool IsOutOfBounds(Position position)
-        {
-            if (Math.Abs(position.X) > MaxX || Math.Abs(position.Y) > MaxY) return true;
-
-            return false;
-        }
-
         #region Entity Methods
-        public Entity AddEntity(Entity entity)
+        /// <summary>
+        /// Add <paramref name="entity"/> to the map
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>The reference to <paramref name="entity"/></returns>
+        /// <exception cref="InvalidDataException"></exception>
+        public void AddEntity(Entity entity)
         {
-            if (IsOutOfBounds(entity.Position)) throw new InvalidDataException($"Position: {entity.Position.ToString()} is out of map bounds");
-            entity.Id = _id++;
+            if (entity.Position.IsOutOfBounds()) throw new InvalidDataException($"Position: {entity.Position} is out of map bounds");
 
             _entities.Add(entity);
-
-            return entity;
         }
 
+        /// <summary>
+        /// Remove <paramref name="entity"/> from the map by reference
+        /// </summary>
+        /// <param name="entity"></param>
         public void RemoveEntity(Entity entity)
         {
-            _entities.Remove(_entities.Find(e => e.Id == entity.Id) ?? throw new Exception("Entity was not found"));
+            _entities.Remove(entity);
         }
 
+        /// <summary>
+        /// Remove entity with <paramref name="id"/> from the map
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void RemoveEntity(int id)
         {
-            _entities.Remove(_entities.Find(e => e.Id == id) ?? throw new Exception("Entity was not found"));
+            _entities.Remove(_entities.Find(e => e.Id == id) ?? throw new InvalidOperationException("Entity was not found"));
         }
 
-        public void RemoveEnitiesAtPosition(Position position)
+        // Look into if this works
+        /// <summary>
+        /// Remove all entities with the <paramref name="name"/> from the map
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void RemoveEntities(string name)
+        {
+            _entities.Remove(_entities.Find(e => e.Name == name) ?? throw new InvalidOperationException("Entity was not found"));
+        }
+
+        /// <summary>
+        /// Remove all entities at <paramref name="position"/> from the map
+        /// </summary>
+        /// <param name="position"></param>
+        public void RemoveEnities(Position position)
         {
             foreach (Entity entity in _entities)
             {

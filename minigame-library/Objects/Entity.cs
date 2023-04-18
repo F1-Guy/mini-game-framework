@@ -6,11 +6,13 @@ namespace minigame_library.Objects
     public abstract class Entity
     {
         private readonly Logger _logger = Logger.GetInstance();
-        private static int _id = 0;
+
+        private static int _lastId = 0;
+        private int _id = 0;
 
         public Entity(string name, Position startPosition, int startHealth, List<Item>? startInventory)
         {
-            _id++;
+            _id = _lastId++;
             Name = name;
             Position = startPosition;
             Health = startHealth;

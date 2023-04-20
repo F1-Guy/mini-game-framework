@@ -26,6 +26,23 @@ namespace minigame_library.Objects
         /// </summary>
         public int Y { get; set; }
 
+        #region Operator overloads
+        public static bool operator ==(Position position1, Position position2)
+        {
+            return position1.X == position2.X && position1.Y == position2.Y;
+        }
+
+        public static bool operator !=(Position position1, Position position2)
+        {
+            return position1.X != position2.X || position1.Y != position2.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
+        #endregion
+
         #region Distance methods
         /// <summary>
         /// Calculates the shortest distance between the current position and the given position
@@ -53,7 +70,7 @@ namespace minigame_library.Objects
         /// Determines if <paramref name="position"/> is out of bounds
         /// </summary>
         /// <param name="position"></param>
-        /// <returns>The boolen that determines if the position is out of bounds</returns>
+        /// <returns>The boolean that determines if the position is out of bounds</returns>
         public bool IsOutOfBounds()
         {
             var map = Map.GetInstance();

@@ -6,6 +6,7 @@ namespace minigame_library.Objects
     public abstract class Entity
     {
         private readonly Logger _logger = Logger.GetInstance();
+        private readonly Map _map = Map.GetInstance();
 
         private static int _lastId = 0;
         private int _id = 0;
@@ -17,7 +18,7 @@ namespace minigame_library.Objects
             Position = startPosition;
             Health = startHealth;
             Inventory = startInventory ?? new List<Item>();
-            Map.GetInstance().AddEntity(this);
+            _map.AddEntity(this);
             _logger.Log(TraceEventType.Information, $"Entity with id {_id} was created at position {startPosition} Name: {name}");
         }
 

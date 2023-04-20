@@ -1,6 +1,5 @@
 ﻿using minigame_library.Items;
 using minigame_library.World;
-using System;
 
 namespace minigame_library.Objects
 {
@@ -107,6 +106,7 @@ namespace minigame_library.Objects
             if (attackItem.Range < Position.DistanceFromCurrentPosition(position))
             {
                 _logger.Log(TraceEventType.Warning, $"The attack to position {position} was out of range");
+                return;
             }
 
             foreach (Entity? entity in map.Entities.Where(e => e.Position == position))

@@ -19,7 +19,6 @@ namespace minigame_library.Configuration
                 Logger.GetInstance().Log(TraceEventType.Error, $"Error loading config file: {ex.Message}");
                 throw ex;
             }
-
         }
 
         /// <summary>
